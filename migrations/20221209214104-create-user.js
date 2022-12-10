@@ -27,7 +27,7 @@ module.exports = {
         allowNull: false
       },
       userSettings: {
-        type: Sequelize.JSON
+        type: Sequelize.JSONB
       },
       createdAt: {
         allowNull: false,

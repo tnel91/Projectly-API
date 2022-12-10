@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
       userSettings: {
-        type: DataTypes.JSON
+        type: DataTypes.JSONB
       },
       createdAt: {
         allowNull: false,

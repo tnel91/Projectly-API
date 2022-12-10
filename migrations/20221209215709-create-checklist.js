@@ -19,7 +19,7 @@ module.exports = {
         }
       },
       listItems: {
-        type: Sequelize.ARRAY(Sequelize.JSON)
+        type: Sequelize.JSONB
       },
       createdAt: {
         allowNull: false,

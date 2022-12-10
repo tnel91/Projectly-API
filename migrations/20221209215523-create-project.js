@@ -30,7 +30,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       materials: {
-        type: Sequelize.ARRAY(Sequelize.JSON)
+        type: Sequelize.JSONB
       },
       images: {
         type: Sequelize.ARRAY(Sequelize.STRING)

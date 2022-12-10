@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING
       },
       materials: {
-        type: DataTypes.ARRAY(DataTypes.JSON)
+        type: DataTypes.JSONB
       },
       images: {
         type: DataTypes.ARRAY(DataTypes.STRING)
