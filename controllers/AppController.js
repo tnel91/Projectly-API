@@ -27,7 +27,13 @@ const getProjectById = async (req, res) => {
   try {
     const project = await Project.findOne({
       where: { id: `${req.params.projectId}` },
-      include: 'owner'
+      include: [
+        {
+          model: User,
+          as: 'owner',
+          attributes: ['userName', 'id']
+        }
+      ]
     })
     res.send(project)
   } catch (error) {
