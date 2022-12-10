@@ -3,11 +3,32 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Project extends Model {
     static associate(models) {
-      // define association here
+      Project.belongsToMany(models.User, {
+        as: 'collaborator',
+        through: models.User_Project,
+        foreignKey: 'projectId'
+      })
+      Project.belongsTo(models.User, {
+        as: 'owner',
+        foreignKey: 'userId'
+      })
+      Project.hasMany(models.Checklist, {
+        as: 'checklist',
+        foreignKey: 'projectId'
+      })
     }
   }
   Project.init(
     {
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'users',
+          key: 'id'
+        }
+      },
       projectName: {
         type: DataTypes.STRING,
         allowNull: false

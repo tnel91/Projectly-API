@@ -11,7 +11,12 @@ module.exports = {
       },
       projectId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'projects',
+          key: 'id'
+        }
       },
       listItems: {
         type: Sequelize.ARRAY(Sequelize.JSON)
