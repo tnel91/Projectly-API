@@ -23,7 +23,20 @@ const getPublicProjects = async (req, res) => {
   }
 }
 
+const getProjectById = async (req, res) => {
+  try {
+    const project = await Project.findOne({
+      where: { id: `${req.params.projectId}` },
+      include: 'owner'
+    })
+    res.send(project)
+  } catch (error) {
+    res.status(500).send({ status: 'Error', msg: error.message })
+  }
+}
+
 module.exports = {
   getAllUsers,
-  getPublicProjects
+  getPublicProjects,
+  getProjectById
 }
