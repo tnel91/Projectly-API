@@ -22,7 +22,10 @@ const Login = async (req, res) => {
       .status(401)
       .send({ status: 'Error', response: 'Incorrect email or password.' })
   } catch (error) {
-    res.status(500).send({ status: 'Error', response: error.errors })
+    res.status(500).send({
+      status: 'Error',
+      msg: `${error.errors[0].type}: ${error.errors[0].message}`
+    })
   }
 }
 
@@ -38,7 +41,10 @@ const Register = async (req, res) => {
     })
     res.send(user)
   } catch (error) {
-    res.status(500).send({ status: 'Error', response: error.errors })
+    res.status(500).send({
+      status: 'Error',
+      msg: `${error.errors[0].type}: ${error.errors[0].message}`
+    })
   }
 }
 

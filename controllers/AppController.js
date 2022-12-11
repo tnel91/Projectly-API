@@ -41,8 +41,18 @@ const getProjectById = async (req, res) => {
   }
 }
 
+const createNewProject = async (req, res) => {
+  try {
+    const newProject = await Project.create({ ...req.body })
+    res.send(newProject)
+  } catch (error) {
+    res.status(500).send({ status: 'Error', msg: error.message })
+  }
+}
+
 module.exports = {
   getAllUsers,
   getPublicProjects,
-  getProjectById
+  getProjectById,
+  createNewProject
 }
