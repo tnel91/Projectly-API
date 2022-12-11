@@ -31,7 +31,7 @@ const getProjectById = async (req, res) => {
         {
           model: User,
           as: 'owner',
-          attributes: ['userName', 'id']
+          attributes: ['username', 'id']
         }
       ]
     })
