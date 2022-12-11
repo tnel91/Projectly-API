@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const controller = require('../controllers/AppController')
+const authController = require('../controllers/AuthController')
 
 router.get('/users', controller.getAllUsers)
 
