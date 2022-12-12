@@ -5,9 +5,19 @@ const middleware = require('../middleware')
 
 router.get('/users', controller.getAllUsers)
 
-router.get('/projects', controller.getPublicProjects)
+router.get(
+  '/projects',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.getPublicProjects
+)
 
-router.get('/projects/:projectId', controller.getProjectById)
+router.get(
+  '/projects/:projectId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.getProjectById
+)
 
 router.post(
   '/projects',
