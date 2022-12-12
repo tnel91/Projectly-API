@@ -9,12 +9,24 @@ router.get('/projects', controller.getPublicProjects)
 
 router.get('/projects/:projectId', controller.getProjectById)
 
-router.post('/projects', controller.createNewProject)
+router.post(
+  '/projects',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.createNewProject
+)
 
 // Auth Routes
 
 router.post('/register', authController.Register)
 
 router.post('/login', authController.Login)
+
+router.get(
+  '/session',
+  middleware.stripToken,
+  middleware.verifyToken,
+  authController.CheckSession
+)
 
 module.exports = router
