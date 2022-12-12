@@ -5,11 +5,20 @@ const middleware = require('../middleware')
 
 router.get('/users', controller.getAllUsers)
 
+// Project Routes
+
 router.get(
   '/projects',
   middleware.stripToken,
   middleware.verifyToken,
   controller.getPublicProjects
+)
+
+router.get(
+  '/projects/user/:userId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.getUserProjects
 )
 
 router.get(

@@ -41,6 +41,24 @@ const getProjectById = async (req, res) => {
   }
 }
 
+const getUserProjects = async (req, res) => {
+  try {
+    const projects = await Project.findAll({
+      where: { userId: req.params.userId },
+      include: [
+        {
+          model: User,
+          as: 'owner',
+          attributes: ['username', 'id']
+        }
+      ]
+    })
+    res.send(projects)
+  } catch (error) {
+    res.status(500).send({ status: 'Error', msg: error.message })
+  }
+}
+
 const createNewProject = async (req, res) => {
   try {
     const newProject = await Project.create({ ...req.body })
@@ -54,5 +72,6 @@ module.exports = {
   getAllUsers,
   getPublicProjects,
   getProjectById,
-  createNewProject
+  createNewProject,
+  getUserProjects
 }
