@@ -7,8 +7,8 @@ module.exports = {
     const projects = [...Array(50)].map((_) => {
       return {
         userId: falso.randNumber({
-          min: 189,
-          max: 198
+          min: 1,
+          max: 10
         }),
         projectName: falso.randProductName(),
         tags: falso.randProductCategory(),

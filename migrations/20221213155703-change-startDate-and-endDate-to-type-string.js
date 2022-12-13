@@ -12,10 +12,12 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.changeColumn('projects', 'startDate', {
+    await queryInterface.removeColumn('projects', 'startDate')
+    await queryInterface.removeColumn('projects', 'endDate')
+    await queryInterface.addColumn('projects', 'startDate', {
       type: Sequelize.DATE
     })
-    await queryInterface.changeColumn('projects', 'endDate', {
+    await queryInterface.addColumn('projects', 'endDate', {
       type: Sequelize.DATE
     })
   }
