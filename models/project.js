@@ -31,33 +31,48 @@ module.exports = (sequelize, DataTypes) => {
       },
       projectName: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 'New Project'
       },
       tags: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        defaultValue: ''
       },
       description: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: ''
       },
       materials: {
-        type: DataTypes.JSONB
+        type: DataTypes.JSONB,
+        allowNull: false,
+        defaultValue: { list: [] }
       },
       images: {
-        type: DataTypes.ARRAY(DataTypes.STRING)
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: false,
+        defaultValue: []
       },
       budget: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: ''
       },
       startDate: {
-        type: DataTypes.DATE
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: ''
       },
       endDate: {
-        type: DataTypes.DATE
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: ''
       },
       isPublic: {
         type: DataTypes.BOOLEAN,
-        allowNull: false
+        allowNull: false,
+        defaultValue: true
       },
       createdAt: {
         allowNull: false,

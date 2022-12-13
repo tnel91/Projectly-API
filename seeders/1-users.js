@@ -6,9 +6,9 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     const users = [...Array(10)].map((_) => {
       return {
-        userName: falso.randUserName(),
+        username: falso.randUserName(),
         email: falso.randEmail(),
-        passwordDigest: falso.randPassword(),
+        password: falso.randPassword(),
         userSettings: '{"darkMode":false}'
       }
     })
