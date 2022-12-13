@@ -18,7 +18,7 @@ module.exports = {
           '{"name":"Plywood","amount":"1 sheet" },' +
           '{"name":"Fabric","amount":"2 yards" },' +
           '{"name":"Worbla","amount":"1 sheet" }]}',
-        images: falso.randImg({ length: 5 }),
+        images: falso.randImg({ length: 3 }),
         budget: `${falso.randCurrencySymbol()} ${falso.randNumber({
           min: 50,
           max: 2000

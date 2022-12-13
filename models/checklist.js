@@ -21,7 +21,9 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
       listItems: {
-        type: DataTypes.JSONB
+        type: DataTypes.JSONB,
+        allowNull: false,
+        defaultValue: { items: [] }
       },
       createdAt: {
         allowNull: false,
