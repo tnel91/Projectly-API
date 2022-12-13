@@ -39,7 +39,7 @@ router.put(
   '/projects/:projectId',
   middleware.stripToken,
   middleware.verifyToken,
-  controller.saveProject
+  controller.updateProject
 )
 
 // Auth Routes

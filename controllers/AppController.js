@@ -68,14 +68,25 @@ const createNewProject = async (req, res) => {
   }
 }
 
-const saveProject = async (req, res) => {
+const updateProject = async (req, res) => {
   try {
-    console.log(req.body)
-    res.send(req.body)
-    // const updatedProject = await Project.update(
-    //   {},
-    //   { where: { id: req.body.id } }
-    // )
+    // res.send(req.body)
+    const updatedProject = await Project.update(
+      {
+        projectName: req.body.projectName,
+        tags: req.body.tags,
+        description: req.body.description,
+        materials: req.body.materials,
+        images: req.body.images,
+        budget: req.body.budget,
+        startDate: req.body.startDate,
+        endDate: req.body.endDate,
+        isPublic: req.body.isPublic,
+        updatedAt: new Date()
+      },
+      { where: { id: req.body.id }, returning: true }
+    )
+    res.send(updatedProject)
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
   }
@@ -87,5 +98,5 @@ module.exports = {
   getProjectById,
   createNewProject,
   getUserProjects,
-  saveProject
+  updateProject
 }

@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
-      projectType: {
+      tags: {
         type: DataTypes.STRING,
         allowNull: false
       },
