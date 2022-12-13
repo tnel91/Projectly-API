@@ -42,6 +42,13 @@ router.put(
   controller.updateProject
 )
 
+router.delete(
+  '/projects/:projectId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.deleteProject
+)
+
 // Auth Routes
 
 router.post('/register', authController.Register)

@@ -92,11 +92,27 @@ const updateProject = async (req, res) => {
   }
 }
 
+const deleteProject = async (req, res) => {
+  try {
+    await Project.destroy({
+      where: {
+        id: req.params.projectId
+      }
+    })
+    res.send({
+      msg: `Project with an id of ${req.params.projectId} has been deleted!`
+    })
+  } catch (error) {
+    res.status(500).send({ status: 'Error', msg: error.message })
+  }
+}
+
 module.exports = {
   getAllUsers,
   getPublicProjects,
   getProjectById,
   createNewProject,
   getUserProjects,
-  updateProject
+  updateProject,
+  deleteProject
 }
