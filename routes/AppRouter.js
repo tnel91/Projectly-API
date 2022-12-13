@@ -35,6 +35,13 @@ router.post(
   controller.createNewProject
 )
 
+router.put(
+  '/projects/:projectId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.saveProject
+)
+
 // Auth Routes
 
 router.post('/register', authController.Register)
