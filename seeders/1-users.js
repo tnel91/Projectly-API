@@ -8,8 +8,7 @@ module.exports = {
       return {
         username: falso.randUserName(),
         email: falso.randEmail(),
-        password: falso.randPassword(),
-        userSettings: '{"darkMode":false}'
+        password: falso.randPassword()
       }
     })
     await queryInterface.bulkInsert('users', users, {})

@@ -34,7 +34,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
       userSettings: {
-        type: DataTypes.JSONB
+        type: DataTypes.JSONB,
+        allowNull: false,
+        defaultValue: { darkMode: false }
       },
       createdAt: {
         allowNull: false,
