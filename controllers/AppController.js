@@ -107,6 +107,19 @@ const deleteProject = async (req, res) => {
   }
 }
 
+const getChecklists = async (req, res) => {
+  try {
+    const checklists = await Checklist.findAll({
+      where: {
+        projectId: req.params.projectId
+      }
+    })
+    res.send(checklists)
+  } catch (error) {
+    res.status(500).send({ status: 'Error', msg: error.message })
+  }
+}
+
 module.exports = {
   getAllUsers,
   getPublicProjects,
@@ -114,5 +127,6 @@ module.exports = {
   createNewProject,
   getUserProjects,
   updateProject,
-  deleteProject
+  deleteProject,
+  getChecklists
 }

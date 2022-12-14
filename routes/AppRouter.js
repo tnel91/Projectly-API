@@ -49,6 +49,13 @@ router.delete(
   controller.deleteProject
 )
 
+router.get(
+  '/checklists/:projectId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.getChecklists
+)
+
 // Auth Routes
 
 router.post('/register', authController.Register)
