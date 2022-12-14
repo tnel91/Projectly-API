@@ -64,10 +64,17 @@ router.post(
 )
 
 router.put(
-  '/checklists/:checkListId',
+  '/checklists/:checklistId',
   middleware.stripToken,
   middleware.verifyToken,
   controller.updateChecklist
+)
+
+router.delete(
+  '/checklists/:checklistId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.deleteChecklist
 )
 
 // Auth Routes

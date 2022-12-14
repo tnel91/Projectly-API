@@ -140,12 +140,27 @@ const updateChecklist = async (req, res) => {
       },
       {
         where: {
-          id: req.params.checkListId
+          id: req.params.checklistId
         }
       }
     )
     res.send({
-      msg: `Checklist with an id of ${req.params.checkListId} has been updated!`
+      msg: `Checklist with an id of ${req.params.checklistId} has been updated!`
+    })
+  } catch (error) {
+    res.status(500).send({ status: 'Error', msg: error.message })
+  }
+}
+
+const deleteChecklist = async (req, res) => {
+  try {
+    await Checklist.destroy({
+      where: {
+        id: req.params.checklistId
+      }
+    })
+    res.send({
+      msg: `Checklist with an id of ${req.params.checklistId} has been deleted!`
     })
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
@@ -162,5 +177,6 @@ module.exports = {
   deleteProject,
   getChecklists,
   createChecklist,
-  updateChecklist
+  updateChecklist,
+  deleteChecklist
 }
