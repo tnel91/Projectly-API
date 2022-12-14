@@ -120,6 +120,15 @@ const getChecklists = async (req, res) => {
   }
 }
 
+const createChecklist = async (req, res) => {
+  try {
+    const newChecklist = await Checklist.create({ ...req.body })
+    res.send(newChecklist)
+  } catch (error) {
+    res.status(500).send({ status: 'Error', msg: error.message })
+  }
+}
+
 module.exports = {
   getAllUsers,
   getPublicProjects,
@@ -128,5 +137,6 @@ module.exports = {
   getUserProjects,
   updateProject,
   deleteProject,
-  getChecklists
+  getChecklists,
+  createChecklist
 }

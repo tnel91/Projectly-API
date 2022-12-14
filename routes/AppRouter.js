@@ -56,6 +56,8 @@ router.get(
   controller.getChecklists
 )
 
+router.post('/checklists', controller.createChecklist)
+
 // Auth Routes
 
 router.post('/register', authController.Register)
