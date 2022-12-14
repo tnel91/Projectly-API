@@ -122,7 +122,9 @@ const getChecklists = async (req, res) => {
 
 const createChecklist = async (req, res) => {
   try {
-    const newChecklist = await Checklist.create({ ...req.body })
+    const newChecklist = await Checklist.create({
+      projectId: req.params.projectId
+    })
     res.send(newChecklist)
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })

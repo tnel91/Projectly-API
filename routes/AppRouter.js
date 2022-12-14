@@ -56,7 +56,12 @@ router.get(
   controller.getChecklists
 )
 
-router.post('/checklists', controller.createChecklist)
+router.post(
+  '/checklists/:projectId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.createChecklist
+)
 
 router.put(
   '/checklists/:checkListId',
