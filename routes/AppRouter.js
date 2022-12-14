@@ -58,6 +58,13 @@ router.get(
 
 router.post('/checklists', controller.createChecklist)
 
+router.put(
+  '/checklists/:checkListId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.updateChecklist
+)
+
 // Auth Routes
 
 router.post('/register', authController.Register)

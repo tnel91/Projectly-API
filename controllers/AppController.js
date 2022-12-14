@@ -129,6 +129,27 @@ const createChecklist = async (req, res) => {
   }
 }
 
+const updateChecklist = async (req, res) => {
+  try {
+    await Checklist.update(
+      {
+        ...req.body,
+        updatedAt: new Date()
+      },
+      {
+        where: {
+          id: req.params.checkListId
+        }
+      }
+    )
+    res.send({
+      msg: `Checklist with an id of ${req.params.checkListId} has been updated!`
+    })
+  } catch (error) {
+    res.status(500).send({ status: 'Error', msg: error.message })
+  }
+}
+
 module.exports = {
   getAllUsers,
   getPublicProjects,
@@ -138,5 +159,6 @@ module.exports = {
   updateProject,
   deleteProject,
   getChecklists,
-  createChecklist
+  createChecklist,
+  updateChecklist
 }
