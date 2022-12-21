@@ -7,12 +7,7 @@ router.get('/users', controller.getAllUsers)
 
 // Project Routes
 
-router.get(
-  '/projects',
-  middleware.stripToken,
-  middleware.verifyToken,
-  controller.getPublicProjects
-)
+router.get('/projects', controller.getPublicProjects)
 
 router.get(
   '/projects/user/:userId',
@@ -21,12 +16,7 @@ router.get(
   controller.getUserProjects
 )
 
-router.get(
-  '/projects/:projectId',
-  middleware.stripToken,
-  middleware.verifyToken,
-  controller.getProjectById
-)
+router.get('/projects/:projectId', controller.getProjectById)
 
 router.post(
   '/projects',
@@ -49,12 +39,7 @@ router.delete(
   controller.deleteProject
 )
 
-router.get(
-  '/checklists/:projectId',
-  middleware.stripToken,
-  middleware.verifyToken,
-  controller.getChecklists
-)
+router.get('/checklists/:projectId', controller.getChecklists)
 
 router.post(
   '/checklists/:projectId',
