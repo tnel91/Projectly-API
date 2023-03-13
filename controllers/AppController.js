@@ -77,7 +77,7 @@ const updateProject = async (req, res) => {
         tags: req.body.tags,
         description: req.body.description,
         materials: req.body.materials,
-        images: req.body.images,
+        images: req.body.image,
         budget: req.body.budget,
         startDate: req.body.startDate,
         endDate: req.body.endDate,

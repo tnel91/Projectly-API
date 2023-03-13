@@ -5,13 +5,13 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Checklist.belongsTo(models.Project, {
         as: 'project',
-        foreignKey: 'projectId'
+        foreignKey: 'project_id'
       })
     }
   }
   Checklist.init(
     {
-      projectId: {
+      project_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         onDelete: 'CASCADE',
@@ -20,17 +20,17 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id'
         }
       },
-      listItems: {
+      list_items: {
         type: DataTypes.JSONB,
         allowNull: false,
         defaultValue: { items: [] }
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: new Date()
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: new Date()

@@ -6,21 +6,21 @@ module.exports = (sequelize, DataTypes) => {
       Project.belongsToMany(models.User, {
         as: 'collaborator',
         through: models.User_Project,
-        foreignKey: 'projectId'
+        foreignKey: 'project_id'
       })
       Project.belongsTo(models.User, {
         as: 'owner',
-        foreignKey: 'userId'
+        foreignKey: 'user_id'
       })
       Project.hasMany(models.Checklist, {
         as: 'checklist',
-        foreignKey: 'projectId'
+        foreignKey: 'project_id'
       })
     }
   }
   Project.init(
     {
-      userId: {
+      user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         onDelete: 'CASCADE',
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id'
         }
       },
-      projectName: {
+      project_name: {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: 'New Project'
@@ -49,37 +49,37 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: { list: [] }
       },
-      images: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: false,
-        defaultValue: []
+      image: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: ''
       },
       budget: {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: ''
       },
-      startDate: {
+      start_date: {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: ''
       },
-      endDate: {
+      end_date: {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: ''
       },
-      isPublic: {
+      is_public: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: new Date()
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: new Date()
