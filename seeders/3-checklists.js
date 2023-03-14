@@ -6,8 +6,8 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     const checklists = [...Array(100)].map((_) => {
       return {
-        projectId: falso.randNumber({ min: 1, max: 50 }),
-        listItems:
+        project_id: falso.randNumber({ min: 1, max: 50 }),
+        list_items:
           '{"items":[' +
           '{"text":"Do this thing.","completed":true },' +
           '{"text":"Then do this.","completed":false },' +

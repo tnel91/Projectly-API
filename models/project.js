@@ -40,8 +40,8 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: ''
       },
       image: {
-        type: DataTypes.STRING,
-        allowNull: true,
+        type: DataTypes.BLOB,
+        allowNull: false,
         defaultValue: ''
       },
       budget: {
@@ -78,7 +78,10 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'Project',
-      tableName: 'projects'
+      tableName: 'projects',
+      timestamps: false,
+      createdAt: 'created_at',
+      updatedAt: 'updated_at'
     }
   )
   return Project

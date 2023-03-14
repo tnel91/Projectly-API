@@ -3,6 +3,7 @@ const { User, Project, Checklist } = require('../models')
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll()
+    console.log(users)
     res.send(users)
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
@@ -10,14 +11,16 @@ const getAllUsers = async (req, res) => {
 }
 
 const getPublicProjects = async (req, res) => {
+  console.log('hit route - getPublicProjects')
   try {
     const projects = await Project.findAll({
       where: {
-        isPublic: true
+        is_public: true
       },
       include: 'owner'
     })
     res.send(projects)
+    console.log(projects)
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
   }
@@ -44,7 +47,7 @@ const getProjectById = async (req, res) => {
 const getUserProjects = async (req, res) => {
   try {
     const projects = await Project.findAll({
-      where: { userId: req.params.userId },
+      where: { user_id: req.params.userId },
       include: [
         {
           model: User,
@@ -69,20 +72,18 @@ const createNewProject = async (req, res) => {
 }
 
 const updateProject = async (req, res) => {
+  console.log(req.body)
   try {
-    // res.send(req.body)
     const updatedProject = await Project.update(
       {
-        projectName: req.body.projectName,
-        tags: req.body.tags,
+        project_name: req.body.projectName,
         description: req.body.description,
-        materials: req.body.materials,
-        images: req.body.image,
+        image: req.body.image,
         budget: req.body.budget,
-        startDate: req.body.startDate,
-        endDate: req.body.endDate,
-        isPublic: req.body.isPublic,
-        updatedAt: new Date()
+        start_date: req.body.startDate,
+        end_date: req.body.endDate,
+        is_public: req.body.isPublic,
+        updated_at: new Date()
       },
       { where: { id: req.body.id }, returning: true }
     )
@@ -111,7 +112,7 @@ const getChecklists = async (req, res) => {
   try {
     const checklists = await Checklist.findAll({
       where: {
-        projectId: req.params.projectId
+        project_id: req.params.projectId
       }
     })
     res.send(checklists)
@@ -123,7 +124,7 @@ const getChecklists = async (req, res) => {
 const createChecklist = async (req, res) => {
   try {
     const newChecklist = await Checklist.create({
-      projectId: req.params.projectId
+      project_id: req.params.projectId
     })
     res.send(newChecklist)
   } catch (error) {
@@ -136,7 +137,7 @@ const updateChecklist = async (req, res) => {
     await Checklist.update(
       {
         ...req.body,
-        updatedAt: new Date()
+        updated_at: new Date()
       },
       {
         where: {

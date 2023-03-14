@@ -5,8 +5,8 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.removeColumn('projects', 'images'),
       await queryInterface.addColumn('projects', 'image', {
-        type: Sequelize.STRING,
-        allowNull: true,
+        type: Sequelize.BLOB,
+        allowNull: false,
         defaultValue: ''
       })
   },
@@ -15,8 +15,8 @@ module.exports = {
     await queryInterface.removeColumn('projects', 'image'),
       await queryInterface.addColumn('projects', 'images', {
         type: Sequelize.ARRAY(Sequelize.STRING),
-        allowNull: true,
-        defaultValue: null
+        allowNull: false,
+        defaultValue: []
       })
   }
 }
