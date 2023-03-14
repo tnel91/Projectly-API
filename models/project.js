@@ -34,20 +34,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 'New Project'
       },
-      tags: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: ''
-      },
       description: {
         type: DataTypes.TEXT,
         allowNull: false,
         defaultValue: ''
-      },
-      materials: {
-        type: DataTypes.JSONB,
-        allowNull: false,
-        defaultValue: { list: [] }
       },
       image: {
         type: DataTypes.STRING,
