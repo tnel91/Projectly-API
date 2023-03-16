@@ -1,4 +1,9 @@
 const { User, Project, Checklist } = require('../models')
+const fs = require('fs')
+const pg = require('pg')
+
+// const multer = require('multer')
+// const imageUpload = multer({ dest: 'uploads/' })
 
 const getAllUsers = async (req, res) => {
   try {
@@ -38,7 +43,25 @@ const getProjectById = async (req, res) => {
         }
       ]
     })
-    res.send(project)
+    // console.log('SENDING FILE')
+    // console.log(project.dataValues.image)
+    let img
+    if (project.dataValues.image.includes('uploads')) {
+      const filePath = project.dataValues.image
+      try {
+        img = fs.readFileSync(filePath)
+        // console.log(img)
+      } catch (error) {
+        console.log(`Error reading image file: ${error.message}`)
+        img = ''
+      }
+    } else {
+      img = project.dataValues.image
+    }
+    res.send({
+      project: project,
+      image: img
+    })
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
   }
@@ -72,13 +95,21 @@ const createNewProject = async (req, res) => {
 }
 
 const updateProject = async (req, res) => {
+  console.log('REQUEST.FILE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+  let picture
+  if (req.file) {
+    picture = req.file.path
+  } else {
+    picture = req.body.image
+  }
   console.log(req.body)
+  console.log(req.file)
   try {
     const updatedProject = await Project.update(
       {
         project_name: req.body.projectName,
         description: req.body.description,
-        image: req.body.image,
+        image: picture,
         budget: req.body.budget,
         start_date: req.body.startDate,
         end_date: req.body.endDate,
@@ -87,8 +118,15 @@ const updateProject = async (req, res) => {
       },
       { where: { id: req.body.id }, returning: true }
     )
-    res.send(updatedProject)
+    const response = updatedProject[1][0].dataValues
+    // console.log(response)
+    const filePath = response.image
+    // console.log(filePath)
+    // console.log('sending')
+    res.sendFile(filePath, { root: '.' })
+    res.send(response)
   } catch (error) {
+    console.log('error')
     res.status(500).send({ status: 'Error', msg: error.message })
   }
 }
