@@ -3,8 +3,6 @@ const controller = require('../controllers/AppController')
 const authController = require('../controllers/AuthController')
 const middleware = require('../middleware')
 
-const multer = require('multer')
-
 router.get('/users', controller.getAllUsers)
 
 // Project Routes
@@ -31,8 +29,16 @@ router.put(
   '/projects/:projectId',
   middleware.stripToken,
   middleware.verifyToken,
-  multer({ dest: 'uploads/' }).single('image'),
+  // middleware.oldHandler.single('image'),
   controller.updateProject
+)
+
+router.put(
+  '/projects/:projectId/image',
+  middleware.stripToken,
+  middleware.verifyToken,
+  middleware.oldHandler.single('image'),
+  controller.updateProjectImage
 )
 
 router.delete(
@@ -77,16 +83,5 @@ router.get(
   middleware.verifyToken,
   authController.CheckSession
 )
-
-// router.post('/image', imageUpload.single('image'), (req, res) => {
-//   console.log(req.file)
-//   res.json('/image api')
-// })
-
-// router.get('/image/:filename', (req, res) => {
-//   res.json('/image/:filename api')
-// })
-
-// console.log(imageUpload)
 
 module.exports = router

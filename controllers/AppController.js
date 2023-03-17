@@ -1,22 +1,23 @@
 const { User, Project, Checklist } = require('../models')
 const fs = require('fs')
 const pg = require('pg')
-
-// const multer = require('multer')
-// const imageUpload = multer({ dest: 'uploads/' })
+const middleware = require('../middleware')
+const bucket = require('../routes/AppRouter')
 
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll()
-    console.log(users)
+    // console.log(users)
     res.send(users)
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
   }
 }
 
+// console.log(bucket)
+
 const getPublicProjects = async (req, res) => {
-  console.log('hit route - getPublicProjects')
+  // console.log('hit route - getPublicProjects')
   try {
     const projects = await Project.findAll({
       where: {
@@ -25,13 +26,14 @@ const getPublicProjects = async (req, res) => {
       include: 'owner'
     })
     res.send(projects)
-    console.log(projects)
+    // console.log(projects)
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
   }
 }
 
 const getProjectById = async (req, res) => {
+  console.log('GET PROJECT BY ID XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
   try {
     const project = await Project.findOne({
       where: { id: `${req.params.projectId}` },
@@ -43,14 +45,12 @@ const getProjectById = async (req, res) => {
         }
       ]
     })
-    // console.log('SENDING FILE')
-    // console.log(project.dataValues.image)
     let img
     if (project.dataValues.image.includes('uploads')) {
+      // download image and save locally
       const filePath = project.dataValues.image
       try {
         img = fs.readFileSync(filePath)
-        // console.log(img)
       } catch (error) {
         console.log(`Error reading image file: ${error.message}`)
         img = ''
@@ -62,6 +62,8 @@ const getProjectById = async (req, res) => {
       project: project,
       image: img
     })
+    console.log('deleting local image file')
+    // delete local image file
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
   }
@@ -95,21 +97,12 @@ const createNewProject = async (req, res) => {
 }
 
 const updateProject = async (req, res) => {
-  console.log('REQUEST.FILE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-  let picture
-  if (req.file) {
-    picture = req.file.path
-  } else {
-    picture = req.body.image
-  }
-  console.log(req.body)
-  console.log(req.file)
+  console.log('UPDATE PROJECT XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
   try {
     const updatedProject = await Project.update(
       {
         project_name: req.body.projectName,
         description: req.body.description,
-        image: picture,
         budget: req.body.budget,
         start_date: req.body.startDate,
         end_date: req.body.endDate,
@@ -119,11 +112,44 @@ const updateProject = async (req, res) => {
       { where: { id: req.body.id }, returning: true }
     )
     const response = updatedProject[1][0].dataValues
-    // console.log(response)
-    const filePath = response.image
-    // console.log(filePath)
-    // console.log('sending')
-    res.sendFile(filePath, { root: '.' })
+    res.send(response)
+  } catch (error) {
+    console.log('error')
+    res.status(500).send({ status: 'Error', msg: error.message })
+  }
+}
+
+const updateProjectImage = async (req, res) => {
+  console.log('UPDATE IMAGE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+  let picture
+  if (req.file) {
+    console.log(req.file)
+    picture = req.file.path
+    // const blob = middleware.bucket.file(req.file.originalname)
+    // const stream = blob.createWriteStream({
+    //   metadata: {
+    //     contentType: req.file.mimetype
+    //   }
+    // })
+    // stream.on('error', (err) => {
+    //   console.log(err)
+    // })
+    // stream.on('finish', () => {
+    //   console.log('uploaded')
+    // })
+    // stream.end(req.file.buffer)
+  } else {
+    picture = req.body.image
+  }
+  try {
+    const updatedProject = await Project.update(
+      {
+        image: picture,
+        updated_at: new Date()
+      },
+      { where: { id: req.body.id }, returning: true }
+    )
+    const response = updatedProject[1][0].dataValues
     res.send(response)
   } catch (error) {
     console.log('error')
@@ -213,6 +239,7 @@ module.exports = {
   createNewProject,
   getUserProjects,
   updateProject,
+  updateProjectImage,
   deleteProject,
   getChecklists,
   createChecklist,

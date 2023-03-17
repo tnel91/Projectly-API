@@ -1,9 +1,26 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-require('dotenv').config()
+const { Storage } = require('@google-cloud/storage')
+const multer = require('multer')
+// const multerGoogleStorage = require('multer-google-storage')
+
+const storage = new Storage()
+const bucket = storage.bucket(process.env.BUCKET_NAME)
 
 const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS)
 const APP_SECRET = process.env.APP_SECRET
+
+const oldHandler = multer({
+  dest: 'uploads'
+})
+
+// const uploadHandler = multer({
+//   storage: multerGoogleStorage.storageEngine({
+//     bucket: bucket,
+//     projectId: process.env.PROJECT_ID,
+//     keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS
+//   })
+// })
 
 const hashPassword = async (password) => {
   let hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
@@ -51,5 +68,7 @@ module.exports = {
   verifyToken,
   createToken,
   comparePassword,
-  hashPassword
+  hashPassword,
+  bucket,
+  oldHandler
 }
