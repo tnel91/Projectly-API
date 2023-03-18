@@ -119,9 +119,10 @@ const updateProject = async (req, res) => {
   }
 }
 
-const updateProjectImage = async (req, res) => {
+const updateProjectImageFile = async (req, res) => {
   console.log('UPDATE IMAGE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
   let picture
+  console.log(req.body.id)
   if (req.file) {
     console.log(req.file)
     picture = req.file.path
@@ -145,6 +146,24 @@ const updateProjectImage = async (req, res) => {
     const updatedProject = await Project.update(
       {
         image: picture,
+        updated_at: new Date()
+      },
+      { where: { id: req.body.id }, returning: true }
+    )
+    const response = updatedProject[1][0].dataValues
+    res.send(response)
+  } catch (error) {
+    console.log('error')
+    res.status(500).send({ status: 'Error', msg: error.message })
+  }
+}
+
+const updateProjectImageUrl = async (req, res) => {
+  console.log(req.body)
+  try {
+    const updatedProject = await Project.update(
+      {
+        image: req.body.imageUrl,
         updated_at: new Date()
       },
       { where: { id: req.body.id }, returning: true }
@@ -239,7 +258,8 @@ module.exports = {
   createNewProject,
   getUserProjects,
   updateProject,
-  updateProjectImage,
+  updateProjectImageFile,
+  updateProjectImageUrl,
   deleteProject,
   getChecklists,
   createChecklist,

@@ -44,6 +44,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: ''
       },
+      image_file: {
+        type: DataTypes.BLOB,
+        allowNull: true,
+        defaultValue: null
+      },
       budget: {
         type: DataTypes.STRING,
         allowNull: false,

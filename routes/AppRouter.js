@@ -34,11 +34,18 @@ router.put(
 )
 
 router.put(
-  '/projects/:projectId/image',
+  '/projects/:projectId/image-file',
   middleware.stripToken,
   middleware.verifyToken,
-  middleware.oldHandler.single('image'),
-  controller.updateProjectImage
+  middleware.oldHandler.single('imageFile'),
+  controller.updateProjectImageFile
+)
+
+router.put(
+  '/projects/:projectId/image-url',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.updateProjectImageUrl
 )
 
 router.delete(
