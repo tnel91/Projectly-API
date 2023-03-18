@@ -1,8 +1,5 @@
 const { User, Project, Checklist } = require('../models')
 const fs = require('fs')
-const pg = require('pg')
-const middleware = require('../middleware')
-const bucket = require('../routes/AppRouter')
 
 const getAllUsers = async (req, res) => {
   try {
@@ -45,25 +42,7 @@ const getProjectById = async (req, res) => {
         }
       ]
     })
-    let img
-    if (project.dataValues.image.includes('uploads')) {
-      // download image and save locally
-      const filePath = project.dataValues.image
-      try {
-        img = fs.readFileSync(filePath)
-      } catch (error) {
-        console.log(`Error reading image file: ${error.message}`)
-        img = ''
-      }
-    } else {
-      img = project.dataValues.image
-    }
-    res.send({
-      project: project,
-      image: img
-    })
-    console.log('deleting local image file')
-    // delete local image file
+    res.send(project)
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
   }
@@ -97,7 +76,6 @@ const createNewProject = async (req, res) => {
 }
 
 const updateProject = async (req, res) => {
-  console.log('UPDATE PROJECT XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
   try {
     const updatedProject = await Project.update(
       {
@@ -120,38 +98,20 @@ const updateProject = async (req, res) => {
 }
 
 const updateProjectImageFile = async (req, res) => {
-  console.log('UPDATE IMAGE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-  let picture
-  console.log(req.body.id)
-  if (req.file) {
-    console.log(req.file)
-    picture = req.file.path
-    // const blob = middleware.bucket.file(req.file.originalname)
-    // const stream = blob.createWriteStream({
-    //   metadata: {
-    //     contentType: req.file.mimetype
-    //   }
-    // })
-    // stream.on('error', (err) => {
-    //   console.log(err)
-    // })
-    // stream.on('finish', () => {
-    //   console.log('uploaded')
-    // })
-    // stream.end(req.file.buffer)
-  } else {
-    picture = req.body.image
-  }
+  let filePath = req.file.path
+  let fileData = fs.readFileSync(filePath)
   try {
     const updatedProject = await Project.update(
       {
-        image: picture,
+        image: req.file.path,
+        image_file: fileData,
         updated_at: new Date()
       },
       { where: { id: req.body.id }, returning: true }
     )
     const response = updatedProject[1][0].dataValues
-    res.send(response)
+    fs.unlinkSync(filePath)
+    res.status(200).send({ status: 'Success', msg: 'Image uploaded' })
   } catch (error) {
     console.log('error')
     res.status(500).send({ status: 'Error', msg: error.message })
@@ -164,6 +124,7 @@ const updateProjectImageUrl = async (req, res) => {
     const updatedProject = await Project.update(
       {
         image: req.body.imageUrl,
+        image_file: null,
         updated_at: new Date()
       },
       { where: { id: req.body.id }, returning: true }

@@ -2,6 +2,7 @@ const router = require('express').Router()
 const controller = require('../controllers/AppController')
 const authController = require('../controllers/AuthController')
 const middleware = require('../middleware')
+const multer = require('multer')
 
 router.get('/users', controller.getAllUsers)
 
@@ -29,7 +30,6 @@ router.put(
   '/projects/:projectId',
   middleware.stripToken,
   middleware.verifyToken,
-  // middleware.oldHandler.single('image'),
   controller.updateProject
 )
 
@@ -37,7 +37,9 @@ router.put(
   '/projects/:projectId/image-file',
   middleware.stripToken,
   middleware.verifyToken,
-  middleware.oldHandler.single('imageFile'),
+  multer({
+    dest: 'uploads'
+  }).single('imageFile'),
   controller.updateProjectImageFile
 )
 
