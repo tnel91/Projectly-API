@@ -17,7 +17,12 @@ router.get(
   controller.getUserProjects
 )
 
-router.get('/projects/:projectId', controller.getProjectById)
+router.get(
+  '/projects/:projectId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.getProjectById
+)
 
 router.post(
   '/projects',
