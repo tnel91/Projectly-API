@@ -62,7 +62,12 @@ router.delete(
   controller.deleteProject
 )
 
-router.get('/checklists/:projectId', controller.getChecklists)
+router.get(
+  '/checklists/:projectId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.getChecklists
+)
 
 router.post(
   '/checklists/:projectId',
