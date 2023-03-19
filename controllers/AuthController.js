@@ -37,7 +37,7 @@ const Register = async (req, res) => {
       username,
       email,
       password: passwordDigest,
-      userSettings
+      user_settings: userSettings
     })
     res.send(user)
   } catch (error) {

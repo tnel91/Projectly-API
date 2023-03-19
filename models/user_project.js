@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   User_Project.init(
     {
-      userId: {
+      user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         onDelete: 'CASCADE',
@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id'
         }
       },
-      projectId: {
+      project_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         onDelete: 'CASCADE',
@@ -26,12 +26,12 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id'
         }
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: new Date()
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: new Date()
@@ -40,7 +40,10 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'User_Project',
-      tableName: 'user_projects'
+      tableName: 'user_projects',
+      timestamps: false,
+      createdAt: 'created_at',
+      updatedAt: 'updated_at'
     }
   )
   return User_Project

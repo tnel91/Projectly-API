@@ -1,29 +1,36 @@
 const { User, Project, Checklist } = require('../models')
+const fs = require('fs')
 
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll()
+    // console.log(users)
     res.send(users)
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
   }
 }
 
+// console.log(bucket)
+
 const getPublicProjects = async (req, res) => {
+  // console.log('hit route - getPublicProjects')
   try {
     const projects = await Project.findAll({
       where: {
-        isPublic: true
+        is_public: true
       },
       include: 'owner'
     })
     res.send(projects)
+    // console.log(projects)
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
   }
 }
 
 const getProjectById = async (req, res) => {
+  console.log('GET PROJECT BY ID XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
   try {
     const project = await Project.findOne({
       where: { id: `${req.params.projectId}` },
@@ -44,7 +51,7 @@ const getProjectById = async (req, res) => {
 const getUserProjects = async (req, res) => {
   try {
     const projects = await Project.findAll({
-      where: { userId: req.params.userId },
+      where: { user_id: req.params.userId },
       include: [
         {
           model: User,
@@ -70,24 +77,62 @@ const createNewProject = async (req, res) => {
 
 const updateProject = async (req, res) => {
   try {
-    // res.send(req.body)
     const updatedProject = await Project.update(
       {
-        projectName: req.body.projectName,
-        tags: req.body.tags,
+        project_name: req.body.projectName,
         description: req.body.description,
-        materials: req.body.materials,
-        images: req.body.images,
         budget: req.body.budget,
-        startDate: req.body.startDate,
-        endDate: req.body.endDate,
-        isPublic: req.body.isPublic,
-        updatedAt: new Date()
+        start_date: req.body.startDate,
+        end_date: req.body.endDate,
+        is_public: req.body.isPublic,
+        updated_at: new Date()
       },
       { where: { id: req.body.id }, returning: true }
     )
-    res.send(updatedProject)
+    const response = updatedProject[1][0].dataValues
+    res.send(response)
   } catch (error) {
+    console.log('error')
+    res.status(500).send({ status: 'Error', msg: error.message })
+  }
+}
+
+const updateProjectImageFile = async (req, res) => {
+  let filePath = req.file.path
+  let fileData = fs.readFileSync(filePath)
+  try {
+    const updatedProject = await Project.update(
+      {
+        image: req.file.path,
+        image_file: fileData,
+        updated_at: new Date()
+      },
+      { where: { id: req.body.id }, returning: true }
+    )
+    const response = updatedProject[1][0].dataValues
+    fs.unlinkSync(filePath)
+    res.status(200).send({ status: 'Success', msg: 'Image uploaded' })
+  } catch (error) {
+    console.log('error')
+    res.status(500).send({ status: 'Error', msg: error.message })
+  }
+}
+
+const updateProjectImageUrl = async (req, res) => {
+  console.log(req.body)
+  try {
+    const updatedProject = await Project.update(
+      {
+        image: req.body.imageUrl,
+        image_file: null,
+        updated_at: new Date()
+      },
+      { where: { id: req.body.id }, returning: true }
+    )
+    const response = updatedProject[1][0].dataValues
+    res.send(response)
+  } catch (error) {
+    console.log('error')
     res.status(500).send({ status: 'Error', msg: error.message })
   }
 }
@@ -111,7 +156,7 @@ const getChecklists = async (req, res) => {
   try {
     const checklists = await Checklist.findAll({
       where: {
-        projectId: req.params.projectId
+        project_id: req.params.projectId
       }
     })
     res.send(checklists)
@@ -123,7 +168,7 @@ const getChecklists = async (req, res) => {
 const createChecklist = async (req, res) => {
   try {
     const newChecklist = await Checklist.create({
-      projectId: req.params.projectId
+      project_id: req.params.projectId
     })
     res.send(newChecklist)
   } catch (error) {
@@ -136,7 +181,7 @@ const updateChecklist = async (req, res) => {
     await Checklist.update(
       {
         ...req.body,
-        updatedAt: new Date()
+        updated_at: new Date()
       },
       {
         where: {
@@ -174,6 +219,8 @@ module.exports = {
   createNewProject,
   getUserProjects,
   updateProject,
+  updateProjectImageFile,
+  updateProjectImageUrl,
   deleteProject,
   getChecklists,
   createChecklist,

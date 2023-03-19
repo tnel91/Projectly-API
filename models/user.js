@@ -6,11 +6,11 @@ module.exports = (sequelize, DataTypes) => {
       User.belongsToMany(models.Project, {
         as: 'collab_project',
         through: models.User_Project,
-        foreignKey: 'userId'
+        foreignKey: 'user_id'
       })
       User.hasMany(models.Project, {
         as: 'owned_project',
-        foreignKey: 'userId'
+        foreignKey: 'user_id'
       })
     }
   }
@@ -33,17 +33,17 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
-      userSettings: {
+      user_settings: {
         type: DataTypes.JSONB,
         allowNull: false,
         defaultValue: { darkMode: false }
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: new Date()
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: new Date()
@@ -52,7 +52,10 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'User',
-      tableName: 'users'
+      tableName: 'users',
+      timestamps: false,
+      createdAt: 'created_at',
+      updatedAt: 'updated_at'
     }
   )
   return User

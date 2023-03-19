@@ -2,6 +2,7 @@ const router = require('express').Router()
 const controller = require('../controllers/AppController')
 const authController = require('../controllers/AuthController')
 const middleware = require('../middleware')
+const multer = require('multer')
 
 router.get('/users', controller.getAllUsers)
 
@@ -16,7 +17,12 @@ router.get(
   controller.getUserProjects
 )
 
-router.get('/projects/:projectId', controller.getProjectById)
+router.get(
+  '/projects/:projectId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.getProjectById
+)
 
 router.post(
   '/projects',
@@ -32,6 +38,23 @@ router.put(
   controller.updateProject
 )
 
+router.put(
+  '/projects/:projectId/image-file',
+  middleware.stripToken,
+  middleware.verifyToken,
+  multer({
+    dest: 'uploads'
+  }).single('imageFile'),
+  controller.updateProjectImageFile
+)
+
+router.put(
+  '/projects/:projectId/image-url',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.updateProjectImageUrl
+)
+
 router.delete(
   '/projects/:projectId',
   middleware.stripToken,
@@ -39,7 +62,12 @@ router.delete(
   controller.deleteProject
 )
 
-router.get('/checklists/:projectId', controller.getChecklists)
+router.get(
+  '/checklists/:projectId',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.getChecklists
+)
 
 router.post(
   '/checklists/:projectId',
