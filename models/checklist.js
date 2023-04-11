@@ -20,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id'
         }
       },
+      order_index: {
+        type: DataTypes.INTEGER
+      },
       list_items: {
         type: DataTypes.JSONB,
         allowNull: false,
