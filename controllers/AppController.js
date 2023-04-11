@@ -4,45 +4,28 @@ const fs = require('fs')
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll()
-    // console.log(users)
     res.send(users)
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
   }
 }
 
-// console.log(bucket)
-
 const getPublicProjects = async (req, res) => {
-  // console.log('hit route - getPublicProjects')
   try {
     const projects = await Project.findAll({
+      attributes: ['id', 'project_name'],
       where: {
         is_public: true
       },
-      include: 'owner'
-    })
-    res.send(projects)
-    // console.log(projects)
-  } catch (error) {
-    res.status(500).send({ status: 'Error', msg: error.message })
-  }
-}
-
-const getProjectById = async (req, res) => {
-  // console.log('GET PROJECT BY ID XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-  try {
-    const project = await Project.findOne({
-      where: { id: `${req.params.projectId}` },
       include: [
         {
           model: User,
           as: 'owner',
-          attributes: ['username', 'id']
+          attributes: ['username']
         }
       ]
     })
-    res.send(project)
+    res.send(projects)
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
   }
@@ -51,12 +34,13 @@ const getProjectById = async (req, res) => {
 const getUserProjects = async (req, res) => {
   try {
     const projects = await Project.findAll({
+      attributes: ['id', 'project_name'],
       where: { user_id: req.params.userId },
       include: [
         {
           model: User,
           as: 'owner',
-          attributes: ['username', 'id']
+          attributes: ['username']
         }
       ]
     })
@@ -70,6 +54,24 @@ const createNewProject = async (req, res) => {
   try {
     const newProject = await Project.create({ ...req.body })
     res.send(newProject)
+  } catch (error) {
+    res.status(500).send({ status: 'Error', msg: error.message })
+  }
+}
+
+const getProjectById = async (req, res) => {
+  try {
+    const project = await Project.findOne({
+      where: { id: `${req.params.projectId}` },
+      include: [
+        {
+          model: User,
+          as: 'owner',
+          attributes: ['username', 'id']
+        }
+      ]
+    })
+    res.send(project)
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
   }
@@ -119,7 +121,6 @@ const updateProjectImageFile = async (req, res) => {
 }
 
 const updateProjectImageUrl = async (req, res) => {
-  // console.log(req.body)
   try {
     const updatedProject = await Project.update(
       {
