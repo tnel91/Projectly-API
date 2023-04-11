@@ -32,10 +32,11 @@ const getPublicProjects = async (req, res) => {
 }
 
 const getUserProjects = async (req, res) => {
+  const { id } = res.locals.payload
   try {
     const projects = await Project.findAll({
       attributes: ['id', 'project_name'],
-      where: { user_id: req.params.userId },
+      where: { user_id: id },
       include: [
         {
           model: User,
@@ -51,8 +52,10 @@ const getUserProjects = async (req, res) => {
 }
 
 const createNewProject = async (req, res) => {
+  const { id } = res.locals.payload
   try {
-    const newProject = await Project.create({ ...req.body })
+    const newProject = await Project.create({ user_id: id })
+    console.log(newProject)
     res.send(newProject)
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
@@ -60,6 +63,7 @@ const createNewProject = async (req, res) => {
 }
 
 const getProjectById = async (req, res) => {
+  const { id } = res.locals.payload
   try {
     const project = await Project.findOne({
       where: { id: `${req.params.projectId}` },
@@ -71,13 +75,18 @@ const getProjectById = async (req, res) => {
         }
       ]
     })
-    res.send(project)
+    if (project.owner.id === id) {
+      res.send(project)
+    } else {
+      res.status(401).send({ status: 'Error', msg: 'Unauthorized' })
+    }
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
   }
 }
 
 const updateProject = async (req, res) => {
+  const { id } = res.locals.payload
   try {
     const updatedProject = await Project.update(
       {
@@ -89,7 +98,7 @@ const updateProject = async (req, res) => {
         is_public: req.body.isPublic,
         updated_at: new Date()
       },
-      { where: { id: req.body.id }, returning: true }
+      { where: { id: req.body.id, user_id: id }, returning: true }
     )
     const response = updatedProject[1][0].dataValues
     res.send(response)
@@ -100,6 +109,7 @@ const updateProject = async (req, res) => {
 }
 
 const updateProjectImageFile = async (req, res) => {
+  const { id } = res.locals.payload
   let filePath = req.file.path
   let fileData = fs.readFileSync(filePath)
   try {
@@ -109,7 +119,7 @@ const updateProjectImageFile = async (req, res) => {
         image_file: fileData,
         updated_at: new Date()
       },
-      { where: { id: req.body.id }, returning: true }
+      { where: { id: req.body.id, user_id: id }, returning: true }
     )
     const response = updatedProject[1][0].dataValues
     fs.unlinkSync(filePath)
@@ -121,6 +131,7 @@ const updateProjectImageFile = async (req, res) => {
 }
 
 const updateProjectImageUrl = async (req, res) => {
+  const { id } = res.locals.payload
   try {
     const updatedProject = await Project.update(
       {
@@ -128,7 +139,7 @@ const updateProjectImageUrl = async (req, res) => {
         image_file: null,
         updated_at: new Date()
       },
-      { where: { id: req.body.id }, returning: true }
+      { where: { id: req.body.id, user_id: id }, returning: true }
     )
     const response = updatedProject[1][0].dataValues
     res.send(response)
@@ -139,10 +150,12 @@ const updateProjectImageUrl = async (req, res) => {
 }
 
 const deleteProject = async (req, res) => {
+  const { id } = res.locals.payload
   try {
     await Project.destroy({
       where: {
-        id: req.params.projectId
+        id: req.params.projectId,
+        user_id: id
       }
     })
     res.send({

@@ -11,7 +11,7 @@ router.get('/users', controller.getAllUsers)
 router.get('/projects', controller.getPublicProjects)
 
 router.get(
-  '/projects/user/:userId',
+  '/projects/user',
   middleware.stripToken,
   middleware.verifyToken,
   controller.getUserProjects
@@ -32,7 +32,7 @@ router.post(
 )
 
 router.put(
-  '/projects/:projectId',
+  '/projects',
   middleware.stripToken,
   middleware.verifyToken,
   controller.updateProject
