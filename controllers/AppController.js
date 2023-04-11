@@ -179,24 +179,29 @@ const createChecklist = async (req, res) => {
 }
 
 const updateChecklistOrder = (req, res) => {
-  const idArray = req.body
-  try {
-    idArray.map(async (id, i) => {
-      await Checklist.update(
-        {
-          order_index: i,
-          updated_at: new Date()
-        },
-        {
-          where: {
-            id: id
+  const { id } = res.locals.payload
+  const { idArr, ownerId } = req.body
+  if (id !== ownerId) {
+    return res.status(401).send({ status: 'Error', msg: 'Unauthorized' })
+  } else {
+    try {
+      idArr.map(async (id, i) => {
+        await Checklist.update(
+          {
+            order_index: i,
+            updated_at: new Date()
+          },
+          {
+            where: {
+              id: id
+            }
           }
-        }
-      )
-    })
-    res.send({ msg: 'Checklist order updated' })
-  } catch (error) {
-    res.status(500).send({ status: 'Error', msg: error.message })
+        )
+      })
+      res.send({ msg: 'Checklist order updated' })
+    } catch (error) {
+      res.status(500).send({ status: 'Error', msg: error.message })
+    }
   }
 }
 
