@@ -30,7 +30,7 @@ const getPublicProjects = async (req, res) => {
 }
 
 const getProjectById = async (req, res) => {
-  console.log('GET PROJECT BY ID XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+  // console.log('GET PROJECT BY ID XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
   try {
     const project = await Project.findOne({
       where: { id: `${req.params.projectId}` },
@@ -119,7 +119,7 @@ const updateProjectImageFile = async (req, res) => {
 }
 
 const updateProjectImageUrl = async (req, res) => {
-  console.log(req.body)
+  // console.log(req.body)
   try {
     const updatedProject = await Project.update(
       {
@@ -157,7 +157,8 @@ const getChecklists = async (req, res) => {
     const checklists = await Checklist.findAll({
       where: {
         project_id: req.params.projectId
-      }
+      },
+      order: [['order_index', 'ASC']]
     })
     res.send(checklists)
   } catch (error) {
@@ -171,6 +172,28 @@ const createChecklist = async (req, res) => {
       project_id: req.params.projectId
     })
     res.send(newChecklist)
+  } catch (error) {
+    res.status(500).send({ status: 'Error', msg: error.message })
+  }
+}
+
+const updateChecklistOrder = (req, res) => {
+  const idArray = req.body
+  try {
+    idArray.map(async (id, i) => {
+      await Checklist.update(
+        {
+          order_index: i,
+          updated_at: new Date()
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      )
+    })
+    res.send({ msg: 'Checklist order updated' })
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
   }
@@ -225,5 +248,6 @@ module.exports = {
   getChecklists,
   createChecklist,
   updateChecklist,
-  deleteChecklist
+  deleteChecklist,
+  updateChecklistOrder
 }

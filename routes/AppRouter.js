@@ -77,6 +77,13 @@ router.post(
 )
 
 router.put(
+  '/checklists/order',
+  middleware.stripToken,
+  middleware.verifyToken,
+  controller.updateChecklistOrder
+)
+
+router.put(
   '/checklists/:checklistId',
   middleware.stripToken,
   middleware.verifyToken,
