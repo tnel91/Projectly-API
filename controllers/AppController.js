@@ -75,10 +75,10 @@ const getProjectById = async (req, res) => {
         }
       ]
     })
-    if (project.owner.id === id) {
-      res.send(project)
-    } else {
+    if (project.owner.id !== id && project.is_public === false) {
       res.status(401).send({ status: 'Error', msg: 'Unauthorized' })
+    } else {
+      res.send(project)
     }
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
