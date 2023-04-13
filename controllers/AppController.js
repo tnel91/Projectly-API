@@ -91,7 +91,7 @@ const getProjectById = async (req, res) => {
 const updateProject = async (req, res) => {
   const { id } = res.locals.payload
   try {
-    const updatedProject = await Project.update(
+    await Project.update(
       {
         project_name: req.body.projectName,
         description: req.body.description,
@@ -103,8 +103,9 @@ const updateProject = async (req, res) => {
       },
       { where: { id: req.body.id, user_id: id }, returning: true }
     )
-    const response = updatedProject[1][0].dataValues
-    res.send(response)
+    res.status(200).send({
+      msg: `Project with an id of ${req.body.id} has been updated!`
+    })
   } catch (error) {
     console.log('error')
     res.status(500).send({ status: 'Error', msg: error.message })
