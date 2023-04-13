@@ -71,14 +71,17 @@ const getProjectById = async (req, res) => {
         {
           model: User,
           as: 'owner',
-          attributes: ['username', 'id']
+          attributes: ['username']
         }
       ]
     })
-    if (project.owner.id !== id && project.is_public === false) {
-      res.status(401).send({ status: 'Error', msg: 'Unauthorized' })
+    if (project.user_id === id) {
+      project.dataValues.canEdit = true
+      res.status(200).send(project.dataValues)
+    } else if (project.is_public === true) {
+      res.status(200).send(project)
     } else {
-      res.send(project)
+      res.status(403).send({ status: 'Error', msg: 'Forbidden' })
     }
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
@@ -152,15 +155,20 @@ const updateProjectImageUrl = async (req, res) => {
 const deleteProject = async (req, res) => {
   const { id } = res.locals.payload
   try {
-    await Project.destroy({
+    const isDeleted = await Project.destroy({
       where: {
         id: req.params.projectId,
         user_id: id
       }
     })
-    res.send({
-      msg: `Project with an id of ${req.params.projectId} has been deleted!`
-    })
+    if (isDeleted === 1) {
+      res.status(200).send({
+        msg: `Project with an id of ${req.params.projectId} has been deleted!`
+      })
+    } else {
+      console.log('forbidden')
+      res.status(403).send({ status: 'Error', msg: 'Forbidden' })
+    }
   } catch (error) {
     res.status(500).send({ status: 'Error', msg: error.message })
   }
@@ -194,6 +202,8 @@ const createChecklist = async (req, res) => {
 const updateChecklistOrder = (req, res) => {
   const { id } = res.locals.payload
   const { idArr, ownerId } = req.body
+  console.log(id)
+  console.log(ownerId)
   if (id !== ownerId) {
     return res.status(401).send({ status: 'Error', msg: 'Unauthorized' })
   } else {
@@ -211,7 +221,7 @@ const updateChecklistOrder = (req, res) => {
           }
         )
       })
-      res.send({ msg: 'Checklist order updated' })
+      res.status(200).send({ msg: 'Checklist order updated' })
     } catch (error) {
       res.status(500).send({ status: 'Error', msg: error.message })
     }
